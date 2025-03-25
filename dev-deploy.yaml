@@ -16,32 +16,31 @@ spec:
     spec:
       containers:
         - name: nginx
-          image: nginx:1.19.0
-          ports:
-            - containerPort: 80
+          image: busybox:1.35
+          command: ["sleep", "3600"]
 
 stages:
   - name: Apply Manifest
     action: apply_manifest
     args:
-      path: "deployment.yaml"
+      path: "busybox-deploy.yaml"
 
   - name: Canary Step 1
     action: canary_step
     args:
       weight: 25
-      pause: 30
+      pause: 10
 
-  - name: Rollout Status Check
+  - name: Rollout Status
     action: rollout_status
     args:
-      path: "deployment.yaml"
+      path: "busybox-deploy.yaml"
 
   - name: Canary Step 2
     action: canary_step
     args:
       weight: 50
-      pause: 30
+      pause: 10
 
   - name: Health Check
     action: health_check
@@ -49,4 +48,5 @@ stages:
   - name: Final Notification
     action: notify
     args:
-      message: "Rollout completed"
+      message: "BusyBox rollout complete"
+

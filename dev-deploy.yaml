@@ -7,15 +7,14 @@ spec:
   replicas: 3
   selector:
     matchLabels:
-      app: web
+      app: nginx
   template:
     metadata:
       labels:
-        app: web
+        app: nginx
     spec:
       containers:
         - name: web-container
-          # 🔁 Change image to trigger rollout
           image: httpd:2.4
           ports:
             - containerPort: 80

@@ -1,10 +1,11 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
 metadata:
-  name: nginx-deploy
-  namespace: development
+  name: nginx-rollout
+  namespace: default
 spec:
   replicas: 3
+  revisionHistoryLimit: 2
   selector:
     matchLabels:
       app: nginx
@@ -14,7 +15,38 @@ spec:
         app: nginx
     spec:
       containers:
-        - name: web-container
-          image: httpd:2.4
+        - name: nginx
+          image: nginx:1.19.0
           ports:
             - containerPort: 80
+
+stages:
+  - name: Apply Manifest
+    action: apply_manifest
+    args:
+      path: "deployment.yaml"
+
+  - name: Canary Step 1
+    action: canary_step
+    args:
+      weight: 25
+      pause: 30
+
+  - name: Rollout Status Check
+    action: rollout_status
+    args:
+      path: "deployment.yaml"
+
+  - name: Canary Step 2
+    action: canary_step
+    args:
+      weight: 50
+      pause: 30
+
+  - name: Health Check
+    action: health_check
+
+  - name: Final Notification
+    action: notify
+    args:
+      message: "Rollout completed"

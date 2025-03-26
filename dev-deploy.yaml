@@ -1,24 +1,26 @@
-apiVersion: argoproj.io/v1alpha1
-kind: Rollout
+# ✅ This part is the K8s deployment manifest
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: nginx-rollout
+  name: busybox-rollout
   namespace: default
 spec:
   replicas: 3
   revisionHistoryLimit: 2
   selector:
     matchLabels:
-      app: nginx
+      app: busybox
   template:
     metadata:
       labels:
-        app: nginx
+        app: busybox
     spec:
       containers:
-        - name: nginx
+        - name: busybox
           image: busybox:1.35
           command: ["sleep", "3600"]
 
+# ✅ This part is for your rollout tool
 stages:
   - name: Apply Manifest
     action: apply_manifest
@@ -49,4 +51,5 @@ stages:
     action: notify
     args:
       message: "BusyBox rollout complete"
+
 

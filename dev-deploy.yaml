@@ -59,4 +59,4 @@ stages:
   - name: Cleanup Old Deployment
     action: cleanup
     args:
-      name: busybok
+      name: busybox

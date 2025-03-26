@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: busybox
-          image: busybox:1.35
+          image: busybox:1.34
           command: ["sleep", "3600"]
 
 # ✅ This part is for your rollout tool
@@ -26,7 +26,11 @@ stages:
     action: apply_manifest
     args:
       path: "busybox-deploy.yaml"
-
+  - name: Test BusyBox
+    action: test_deploy
+    args:
+      path: busybox-test.yaml
+      real_path: busybox-prod.yaml
   - name: Canary Step 1
     action: canary_step
     args:
@@ -51,13 +55,8 @@ stages:
     action: notify
     args:
       message: "BusyBox rollout complete"
-  - name: Test BusyBox
-    action: test_deploy
-    args:
-      path: /tmp/busybox-test.yaml
-      real_path: /tmp/busybox-prod.yaml
-      
+
   - name: Cleanup Old Deployment
     action: cleanup
     args:
-      name: nginx-rollout
+      name: busybok

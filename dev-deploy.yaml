@@ -22,15 +22,14 @@ spec:
 
 # ✅ This part is for your rollout tool
 stages:
-  - name: Test BusyBox
-    action: test_deploy
-    args:
-      path: busybox-test.yaml
   - name: Apply Manifest
     action: apply_manifest
     args:
       path: "busybox-deploy.yaml"
-
+  - name: Test BusyBox
+    action: test_deploy
+    args:
+      path: busybox-test.yaml
   - name: Canary Step 1
     action: canary_step
     args:

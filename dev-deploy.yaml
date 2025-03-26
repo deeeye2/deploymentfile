@@ -30,7 +30,6 @@ stages:
     action: test_deploy
     args:
       path: busybox-test.yaml
-      real_path: busybox-prod.yaml
   - name: Canary Step 1
     action: canary_step
     args:
